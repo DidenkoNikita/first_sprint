@@ -21,7 +21,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Widget build(BuildContext context) {
     const arr = [1, 2, 3, 4, 5, 6];
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: const Color.fromRGBO(48, 48, 48, 1),
+        elevation: 0,
         title: const Text(
           'Sign up',
         ),

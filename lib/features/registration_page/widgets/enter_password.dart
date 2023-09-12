@@ -21,11 +21,12 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget> {
   var readPassword = false;
   var readAgainPassword = false;
   var checkbox = false;
+  var password = '';
+  var repeatPassword = '';
+  var correctPassword = false;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return SingleChildScrollView(
       child: Form(
         key: formKey,
@@ -60,11 +61,23 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget> {
                   decoration: BoxDecoration(
                     color: const Color.fromRGBO(36, 36, 36, 1),
                     borderRadius: BorderRadius.circular(10),
+                    border: correctPassword == true
+                        ? Border.all(
+                            color: const Color.fromRGBO(235, 87, 87, 1),
+                            width: 1,
+                          )
+                        : null,
                   ),
                   child: Row(
                     children: [
                       Expanded(
                         child: TextField(
+                          onChanged: (value) {
+                            setState(() {
+                              password = value;
+                              correctPassword = false;
+                            });
+                          },
                           cursorColor: Colors.white,
                           obscureText: readPassword == true ? false : true,
                           style: const TextStyle(
@@ -100,8 +113,23 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget> {
                     ],
                   ),
                 ),
-                const SizedBox(
+                SizedBox(
+                  width: 365,
                   height: 20,
+                  child: Row(
+                    children: [
+                      if (correctPassword == true)
+                        const Text(
+                          'Please check the password matches the required characters',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: Color.fromRGBO(235, 87, 87, 1),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
                 Container(
                   width: 365,
@@ -115,6 +143,12 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget> {
                     children: [
                       Expanded(
                         child: TextField(
+                          onChanged: (value) {
+                            setState(() {
+                              repeatPassword = value;
+                              correctPassword = false;
+                            });
+                          },
                           cursorColor: Colors.white,
                           obscureText: readAgainPassword == true ? false : true,
                           style: const TextStyle(
@@ -206,11 +240,35 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget> {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      widget.updateActiveStep(widget.activeStep + 1);
+                      setState(() {
+                        if (password.length < 8 ||
+                            !password.contains(RegExp(r'[a-z]')) ||
+                            !password.contains(RegExp(r'[A-Z]')) ||
+                            !password.contains(RegExp(r'\d')) ||
+                            !password.contains(
+                                RegExp(r'[\!\@\#\$\%\^\&\*\(\)\-\_\=\+]')) ||
+                            password != repeatPassword) {
+                          correctPassword = true;
+                        }
+                        if (password.length >= 8 &&
+                            password.contains(RegExp(r'[a-z]')) &&
+                            password.contains(RegExp(r'[A-Z]')) &&
+                            password.contains(RegExp(r'\d')) &&
+                            password.contains(
+                                RegExp(r'[\!\@\#\$\%\^\&\*\(\)\-\_\=\+]')) &&
+                            password == repeatPassword) {
+                          widget.updateActiveStep(widget.activeStep + 1);
+                        }
+                      });
+                      FocusScope.of(context).unfocus();
                     },
-                    child: Text(
+                    child: const Text(
                       'Next',
-                      style: theme.textTheme.titleSmall,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),

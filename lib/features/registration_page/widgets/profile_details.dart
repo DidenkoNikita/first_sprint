@@ -20,9 +20,12 @@ class _ProfileDetailsWidgetState extends State<ProfileDetailsWidget> {
   DateTime? selectedDate;
   TextEditingController dateController = TextEditingController();
 
+  var correctName = false;
+  var name = '';
+  var gender = 'Male';
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     late int activeStep = widget.activeStep;
     final List<String> arr = ['Male', 'Female', 'No gender'];
 
@@ -51,28 +54,56 @@ class _ProfileDetailsWidgetState extends State<ProfileDetailsWidget> {
             decoration: BoxDecoration(
               color: const Color.fromRGBO(36, 36, 36, 1),
               borderRadius: BorderRadius.circular(10),
+              border: correctName == true
+                  ? Border.all(
+                      color: const Color.fromRGBO(235, 87, 87, 1),
+                      width: 1,
+                    )
+                  : null,
             ),
-            child: const Expanded(
+            child: Expanded(
               child: TextField(
+                onChanged: (value) {
+                  setState(() {
+                    name = value;
+                    correctName = false;
+                  });
+                },
                 cursorColor: Colors.white,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),
-                decoration: InputDecoration(
-                    hintText: 'Name',
-                    hintStyle: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    border: InputBorder.none),
+                decoration: const InputDecoration(
+                  hintText: 'Name',
+                  hintStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  border: InputBorder.none,
+                ),
               ),
             ),
           ),
-          const SizedBox(
+          SizedBox(
+            width: 365,
             height: 20,
+            child: Row(
+              children: [
+                if (correctName == true)
+                  const Text(
+                    'Please fill in the required field',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: Color.fromRGBO(235, 87, 87, 1),
+                    ),
+                  ),
+              ],
+            ),
           ),
           Container(
             width: 365,
@@ -137,17 +168,23 @@ class _ProfileDetailsWidgetState extends State<ProfileDetailsWidget> {
                     width: 120,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: const Color.fromRGBO(36, 36, 36, 1),
+                      color: gender == button
+                          ? const Color.fromRGBO(223, 197, 255, 1)
+                          : const Color.fromRGBO(36, 36, 36, 1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          gender = button;
+                        });
+                      },
                       child: Text(
                         button,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
-                          color: Colors.white,
+                          color: gender == button ? Colors.black : Colors.white,
                         ),
                       ),
                     ),
@@ -168,11 +205,24 @@ class _ProfileDetailsWidgetState extends State<ProfileDetailsWidget> {
             ),
             child: TextButton(
               onPressed: () {
-                widget.updateActiveStep(activeStep + 1);
+                setState(() {
+                  if (name.length >= 3 && selectedDate != null) {
+                    widget.updateActiveStep(activeStep + 1);
+                  }
+                  if (name.length < 3) {
+                    correctName = true;
+                  }
+                  debugPrint(selectedDate.toString());
+                });
+                FocusScope.of(context).unfocus();
               },
-              child: Text(
+              child: const Text(
                 'Next',
-                style: theme.textTheme.titleSmall,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black,
+                ),
               ),
             ),
           ),

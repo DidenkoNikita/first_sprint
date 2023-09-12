@@ -13,17 +13,24 @@ class LoginFormWidget extends StatefulWidget {
 class _LoginFormWidgetState extends State<LoginFormWidget> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   final TextEditingController controller = TextEditingController();
   String initialCountry = 'RU';
   PhoneNumber number = PhoneNumber(isoCode: 'RU');
 
+  var phone = '';
+  var password = '';
+
   var readPassword = false;
   var checkbox = false;
 
+  var correctPhone = false;
+  var correctPassword = false;
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return SingleChildScrollView(
       child: Form(
         key: formKey,
@@ -38,19 +45,26 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                 ),
                 Container(
                   width: 365,
-                  height: 48,
+                  height: 50,
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                   decoration: BoxDecoration(
                     color: const Color.fromRGBO(36, 36, 36, 1),
                     borderRadius: BorderRadius.circular(10),
+                    border: correctPhone == true
+                        ? Border.all(
+                            color: const Color.fromRGBO(235, 87, 87, 1),
+                            width: 1,
+                          )
+                        : null,
                   ),
                   child: InternationalPhoneNumberInput(
                     onInputChanged: (PhoneNumber number) {
-                      debugPrint(number.phoneNumber);
+                      setState(() {
+                        phone = number.phoneNumber.toString();
+                        correctPhone = false;
+                      });
                     },
-                    onInputValidated: (bool value) {
-                      debugPrint(value.toString());
-                    },
+                    onInputValidated: (bool value) {},
                     hintText: 'Phone',
                     errorMessage: 'Number entered incorrectly',
                     cursorColor: Colors.white,
@@ -84,7 +98,7 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                       contentPadding: EdgeInsets.symmetric(horizontal: -45),
                       border: InputBorder.none,
                     ),
-                    textFieldController: controller,
+                    textFieldController: phoneController,
                     formatInput: true,
                     maxLength: 13,
                     keyboardType: const TextInputType.numberWithOptions(
@@ -92,12 +106,29 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                       decimal: true,
                     ),
                     onSaved: (PhoneNumber number) {
-                      debugPrint('On Saved: $number');
+                      setState(() {
+                        phone = number.phoneNumber.toString();
+                      });
                     },
                   ),
                 ),
-                const SizedBox(
+                SizedBox(
+                  width: 365,
                   height: 20,
+                  child: Row(
+                    children: [
+                      if (correctPhone == true)
+                        const Text(
+                          'Number entered incorrectly',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: Color.fromRGBO(235, 87, 87, 1),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
                 Container(
                   width: 365,
@@ -106,11 +137,24 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                   decoration: BoxDecoration(
                     color: const Color.fromRGBO(36, 36, 36, 1),
                     borderRadius: BorderRadius.circular(10),
+                    border: correctPassword == true
+                        ? Border.all(
+                            color: const Color.fromRGBO(235, 87, 87, 1),
+                            width: 1,
+                          )
+                        : null,
                   ),
                   child: Row(
                     children: [
                       Expanded(
                         child: TextField(
+                          onChanged: (value) {
+                            setState(() {
+                              password = value;
+                              correctPassword = false;
+                            });
+                          },
+                          controller: passwordController,
                           cursorColor: Colors.white,
                           obscureText: readPassword == true ? false : true,
                           style: const TextStyle(
@@ -146,8 +190,23 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                     ],
                   ),
                 ),
-                const SizedBox(
+                SizedBox(
+                  width: 365,
                   height: 20,
+                  child: Row(
+                    children: [
+                      if (correctPassword == true)
+                        const Text(
+                          'Password entered incorrectly',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: Color.fromRGBO(235, 87, 87, 1),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
                 Row(
                   children: [
@@ -201,10 +260,30 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: TextButton(
-                    onPressed: () {},
-                    child: Text(
+                    onPressed: () {
+                      setState(() {
+                        if (phone.length <= 11) {
+                          debugPrint(phone.length.toString());
+                          correctPhone = true;
+                        }
+                        if (password.length < 8 ||
+                            !password.contains(RegExp(r'[a-z]')) ||
+                            !password.contains(RegExp(r'[A-Z]')) ||
+                            !password.contains(RegExp(r'\d')) ||
+                            !password.contains(
+                                RegExp(r'[\!\@\#\$\%\^\&\*\(\)\-\_\=\+]'))) {
+                          correctPassword = true;
+                        }
+                      });
+                      FocusScope.of(context).unfocus();
+                    },
+                    child: const Text(
                       'Log in',
-                      style: theme.textTheme.titleSmall,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ),
@@ -273,11 +352,11 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 72, 10, 0),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(0, 72, 10, 0),
                       child: Text(
                         'Don’t have an account?',
-                        style: theme.textTheme.bodySmall?.copyWith(
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,

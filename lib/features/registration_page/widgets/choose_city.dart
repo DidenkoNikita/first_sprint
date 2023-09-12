@@ -144,22 +144,20 @@ class _ChooseCategoriesWidgetState extends State<ChooseCityWidget> {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Container(
-          child: Column(
-            children: filteredCities.map((city) {
-              return ListTile(
-                title: Text(city),
-                onTap: () {
-                  setState(() {
-                    selectedCity = city;
-                    searchController.text = city;
-                    filteredCities = [];
-                    Navigator.pop(context); // Закрыть модальное окно
-                  });
-                },
-              );
-            }).toList(),
-          ),
+        return Column(
+          children: filteredCities.map((city) {
+            return ListTile(
+              title: Text(city),
+              onTap: () {
+                setState(() {
+                  selectedCity = city;
+                  searchController.text = city;
+                  filteredCities = [];
+                  Navigator.pop(context);
+                });
+              },
+            );
+          }).toList(),
         );
       },
     );
@@ -167,8 +165,6 @@ class _ChooseCategoriesWidgetState extends State<ChooseCityWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -257,9 +253,13 @@ class _ChooseCategoriesWidgetState extends State<ChooseCityWidget> {
               onPressed: () {
                 widget.updateActiveStep(widget.activeStep + 1);
               },
-              child: Text(
+              child: const Text(
                 'Next',
-                style: theme.textTheme.titleSmall,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black,
+                ),
               ),
             ),
           ),

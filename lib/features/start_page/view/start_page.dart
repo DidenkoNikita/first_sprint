@@ -10,8 +10,6 @@ class StartPage extends StatefulWidget {
 class _StartPageState extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       body: Center(
         child: Column(
@@ -21,18 +19,24 @@ class _StartPageState extends State<StartPage> {
               padding: const EdgeInsets.fromLTRB(0, 150, 0, 10),
               child: Image.asset('assets/png/logo.png'),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: Text(
                 'evently',
-                style: theme.textTheme.bodyMedium,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 30, 0, 40),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(0, 30, 0, 40),
               child: Text(
                 'Don’t have an account?',
-                style: theme.textTheme.bodySmall,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
             Container(
@@ -47,9 +51,13 @@ class _StartPageState extends State<StartPage> {
                 onPressed: () {
                   Navigator.of(context).pushNamed('/registration');
                 },
-                child: Text(
+                child: const Text(
                   'Create personal account',
-                  style: theme.textTheme.titleSmall,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
@@ -64,9 +72,13 @@ class _StartPageState extends State<StartPage> {
                 ),
                 child: TextButton(
                   onPressed: () {},
-                  child: Text(
+                  child: const Text(
                     'Create brand account',
-                    style: theme.textTheme.titleSmall,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
@@ -74,11 +86,11 @@ class _StartPageState extends State<StartPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 72, 10, 0),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(0, 72, 10, 0),
                   child: Text(
                     'Already have the account?',
-                    style: theme.textTheme.bodySmall?.copyWith(
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
@@ -101,7 +113,7 @@ class _StartPageState extends State<StartPage> {
                       Navigator.of(context).pushNamed('/login');
                     },
                   ),
-                )
+                ),
               ],
             ),
           ],

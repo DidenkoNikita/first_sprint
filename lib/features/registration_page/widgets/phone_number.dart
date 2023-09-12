@@ -23,9 +23,11 @@ class _PhoneNumberWidgetState extends State<PhoneNumberWidget> {
   String initialCountry = 'RU';
   PhoneNumber number = PhoneNumber(isoCode: 'RU');
 
+  var phone = '';
+  var correctPhone = false;
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     late int activeStep = widget.activeStep;
 
     return SingleChildScrollView(
@@ -55,19 +57,26 @@ class _PhoneNumberWidgetState extends State<PhoneNumberWidget> {
             ),
             Container(
               width: 365,
-              height: 48,
+              height: 50,
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
               decoration: BoxDecoration(
                 color: const Color.fromRGBO(36, 36, 36, 1),
                 borderRadius: BorderRadius.circular(10),
+                border: correctPhone == true
+                    ? Border.all(
+                        color: const Color.fromRGBO(235, 87, 87, 1),
+                        width: 1,
+                      )
+                    : null,
               ),
               child: InternationalPhoneNumberInput(
                 onInputChanged: (PhoneNumber number) {
-                  debugPrint(number.phoneNumber);
+                  setState(() {
+                    phone = number.phoneNumber.toString();
+                    correctPhone = false;
+                  });
                 },
-                onInputValidated: (bool value) {
-                  debugPrint(value.toString());
-                },
+                onInputValidated: (bool value) {},
                 hintText: 'Phone',
                 errorMessage: 'Number entered incorrectly',
                 cursorColor: Colors.white,
@@ -107,12 +116,29 @@ class _PhoneNumberWidgetState extends State<PhoneNumberWidget> {
                   decimal: true,
                 ),
                 onSaved: (PhoneNumber number) {
-                  debugPrint('On Saved: $number');
+                  setState(() {
+                    phone = number.phoneNumber.toString();
+                  });
                 },
               ),
             ),
-            const SizedBox(
+            SizedBox(
+              width: 365,
               height: 20,
+              child: Row(
+                children: [
+                  if (correctPhone == true)
+                    const Text(
+                      'Number entered incorrectly',
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Color.fromRGBO(235, 87, 87, 1),
+                      ),
+                    ),
+                ],
+              ),
             ),
             Container(
               width: 365,
@@ -124,13 +150,23 @@ class _PhoneNumberWidgetState extends State<PhoneNumberWidget> {
               child: TextButton(
                 onPressed: () {
                   setState(() {
-                    widget.updateActiveStep(activeStep + 1);
-                    debugPrint(activeStep.toString());
+                    if (phone.length == 12) {
+                      widget.updateActiveStep(activeStep + 1);
+                      correctPhone = false;
+                    }
+                    if (phone.length < 12) {
+                      correctPhone = true;
+                    }
                   });
+                  FocusScope.of(context).unfocus();
                 },
-                child: Text(
+                child: const Text(
                   'Next',
-                  style: theme.textTheme.titleSmall,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),

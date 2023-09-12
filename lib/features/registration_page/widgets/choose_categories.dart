@@ -15,10 +15,30 @@ class ChooseCategoriesWidget extends StatefulWidget {
 }
 
 class _ChooseCategoriesWidgetState extends State<ChooseCategoriesWidget> {
+  Map<String, bool> obj = {
+    'restaurants': false,
+    'trade_fairs': false,
+    'lectures': false,
+    'cafe': false,
+    'bars': false,
+    'sport': false,
+    'dancing': false,
+    'games': false,
+    'quests': false,
+    'concerts': false,
+    'parties': false,
+    'show': false,
+    'for_free': false,
+    'cinema': false,
+    'theaters': false,
+  };
+
+  bool areAllFalse() {
+    return !obj.containsValue(true);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     const List<String> arr = [
       'Restaurants',
       'Trade fairs',
@@ -36,6 +56,7 @@ class _ChooseCategoriesWidgetState extends State<ChooseCategoriesWidget> {
       'Cinema',
       'Theaters',
     ];
+
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -63,21 +84,36 @@ class _ChooseCategoriesWidgetState extends State<ChooseCategoriesWidget> {
                 runSpacing: 20,
                 alignment: WrapAlignment.center,
                 children: arr.map((button) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(36, 36, 36, 1),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 14),
-                    child: InkWell(
-                      onTap: () {},
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        final key = button.toLowerCase().replaceAll(' ', '_');
+                        obj[key] = !(obj[key] ?? false);
+                        debugPrint(obj.toString());
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: obj[button.toLowerCase().replaceAll(' ', '_')] ==
+                                true
+                            ? const Color.fromRGBO(223, 197, 255, 1)
+                            : const Color.fromRGBO(36, 36, 36, 1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
                       child: Text(
                         button,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
-                          color: Colors.white,
+                          color:
+                              obj[button.toLowerCase().replaceAll(' ', '_')] ==
+                                      true
+                                  ? Colors.black
+                                  : Colors.white,
                         ),
                       ),
                     ),
@@ -93,16 +129,24 @@ class _ChooseCategoriesWidgetState extends State<ChooseCategoriesWidget> {
             width: 365,
             height: 48,
             decoration: BoxDecoration(
-              color: const Color.fromRGBO(227, 245, 99, 1),
+              color: areAllFalse()
+                  ? const Color.fromRGBO(227, 245, 99, 1)
+                  : const Color.fromRGBO(227, 245, 99, 1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: TextButton(
-              onPressed: () {
-                widget.updateActiveStep(widget.activeStep + 1);
-              },
-              child: Text(
+              onPressed: areAllFalse()
+                  ? null
+                  : () {
+                      widget.updateActiveStep(widget.activeStep + 1);
+                    },
+              child: const Text(
                 'Next',
-                style: theme.textTheme.titleSmall,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black,
+                ),
               ),
             ),
           ),
