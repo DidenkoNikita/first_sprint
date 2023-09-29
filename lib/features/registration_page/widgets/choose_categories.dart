@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class ChooseCategoriesWidget extends StatefulWidget {
   final int activeStep;
   final void Function(int newStep) updateActiveStep;
+  final void Function(Map<String, bool> obj) onCategoriesChoiced;
 
   const ChooseCategoriesWidget({
     Key? key,
     required this.activeStep,
+    required this.onCategoriesChoiced,
     required this.updateActiveStep,
   }) : super(key: key);
 
@@ -138,6 +140,7 @@ class _ChooseCategoriesWidgetState extends State<ChooseCategoriesWidget> {
               onPressed: areAllFalse()
                   ? null
                   : () {
+                      widget.onCategoriesChoiced(obj);
                       widget.updateActiveStep(widget.activeStep + 1);
                     },
               child: const Text(

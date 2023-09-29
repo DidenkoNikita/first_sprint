@@ -3,10 +3,12 @@ import 'package:flutter_svg/svg.dart';
 
 class ProfileDetailsWidget extends StatefulWidget {
   final int activeStep;
+  final void Function(String name, String gender, String date) onProfileDetails;
   final void Function(int newStep) updateActiveStep;
 
   const ProfileDetailsWidget({
     Key? key,
+    required this.onProfileDetails,
     required this.activeStep,
     required this.updateActiveStep,
   }) : super(key: key);
@@ -207,6 +209,11 @@ class _ProfileDetailsWidgetState extends State<ProfileDetailsWidget> {
               onPressed: () {
                 setState(() {
                   if (name.length >= 3 && selectedDate != null) {
+                    widget.onProfileDetails(
+                      name,
+                      gender,
+                      selectedDate.toString().substring(0, 10),
+                    );
                     widget.updateActiveStep(activeStep + 1);
                   }
                   if (name.length < 3) {

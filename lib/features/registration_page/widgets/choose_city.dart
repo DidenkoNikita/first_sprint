@@ -1,12 +1,18 @@
+import 'package:evently_sprint/requests/registration/registration.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ChooseCityWidget extends StatefulWidget {
   final int activeStep;
   final void Function(int newStep) updateActiveStep;
+  final void Function(String city) onCityEntered;
+  final Map user;
 
   const ChooseCityWidget({
     Key? key,
+    required this.user,
     required this.activeStep,
+    required this.onCityEntered,
     required this.updateActiveStep,
   }) : super(key: key);
 
@@ -18,6 +24,7 @@ class _ChooseCategoriesWidgetState extends State<ChooseCityWidget> {
   String? selectedCity;
   TextEditingController searchController = TextEditingController();
   List<String> filteredCities = [];
+  GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   final List<String> arr = [
     'Saint Petersburg',
@@ -141,23 +148,44 @@ class _ChooseCategoriesWidgetState extends State<ChooseCityWidget> {
   }
 
   void _showModalBottomSheet(BuildContext context) {
+    if (filteredCities.isEmpty) return;
+
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (context) {
-        return Column(
-          children: filteredCities.map((city) {
-            return ListTile(
-              title: Text(city),
-              onTap: () {
-                setState(() {
-                  selectedCity = city;
-                  searchController.text = city;
-                  filteredCities = [];
-                  Navigator.pop(context);
-                });
-              },
-            );
-          }).toList(),
+        return Container(
+          height: 525,
+          decoration: const BoxDecoration(
+            color: Color.fromRGBO(36, 36, 36, 1),
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(10),
+            ),
+          ),
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+            children: filteredCities.map((city) {
+              return ListTile(
+                title: Text(
+                  city,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white,
+                  ),
+                ),
+                onTap: () {
+                  setState(() {
+                    selectedCity = city;
+                    searchController.text = city;
+                    filteredCities = [];
+                    Navigator.pop(context);
+                  });
+                },
+              );
+            }).toList(),
+          ),
         );
       },
     );
@@ -184,22 +212,51 @@ class _ChooseCategoriesWidgetState extends State<ChooseCityWidget> {
           const SizedBox(
             height: 40,
           ),
-          SizedBox(
-            width: 306,
+          Container(
+            width: 365,
+            decoration: BoxDecoration(
+              color: const Color.fromRGBO(36, 36, 36, 1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
             child: Column(
               children: [
-                TextField(
-                  controller: searchController,
-                  onTap: () {
-                    _showModalBottomSheet(context);
-                  },
-                  onChanged: filterCities,
-                  decoration: const InputDecoration(
-                    labelText: 'Search City',
-                    border: OutlineInputBorder(),
-                  ),
+                Row(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/svg/city.svg',
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: TextField(
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                        ),
+                        controller: searchController,
+                        onTap: () {
+                          _showModalBottomSheet(context);
+                        },
+                        onChanged: filterCities,
+                        decoration: const InputDecoration(
+                          hintText: 'City',
+                          hintStyle: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    SvgPicture.asset(
+                      'assets/svg/chevron-down.svg',
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 10),
               ],
             ),
           ),
@@ -216,7 +273,9 @@ class _ChooseCategoriesWidgetState extends State<ChooseCityWidget> {
                 children: arr.map((button) {
                   return Container(
                     decoration: BoxDecoration(
-                      color: const Color.fromRGBO(36, 36, 36, 1),
+                      color: selectedCity == button
+                          ? const Color.fromRGBO(223, 197, 255, 1)
+                          : const Color.fromRGBO(36, 36, 36, 1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     padding: const EdgeInsets.symmetric(
@@ -224,13 +283,20 @@ class _ChooseCategoriesWidgetState extends State<ChooseCityWidget> {
                       vertical: 14,
                     ),
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        setState(() {
+                          selectedCity = button;
+                          searchController.text = selectedCity!;
+                        });
+                      },
                       child: Text(
                         button,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
-                          color: Colors.white,
+                          color: selectedCity == button
+                              ? Colors.black
+                              : Colors.white,
                         ),
                       ),
                     ),
@@ -240,7 +306,7 @@ class _ChooseCategoriesWidgetState extends State<ChooseCityWidget> {
             ),
           ),
           const SizedBox(
-            height: 200,
+            height: 242,
           ),
           Container(
             width: 365,
@@ -251,7 +317,16 @@ class _ChooseCategoriesWidgetState extends State<ChooseCityWidget> {
             ),
             child: TextButton(
               onPressed: () {
-                widget.updateActiveStep(widget.activeStep + 1);
+                setState(() async {
+                  if (selectedCity != null) {
+                    widget.onCityEntered(selectedCity.toString());
+                    if (widget.user['user']['city'] != '') {
+                      await Registration(
+                              user: widget.user, navigatorKey: navigatorKey)
+                          .registration();
+                    }
+                  }
+                });
               },
               child: const Text(
                 'Next',

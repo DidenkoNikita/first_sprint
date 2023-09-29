@@ -1,3 +1,4 @@
+import 'package:evently_sprint/requests/login/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,12 +17,15 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   final TextEditingController controller = TextEditingController();
   String initialCountry = 'RU';
   PhoneNumber number = PhoneNumber(isoCode: 'RU');
 
   var phone = '';
   var password = '';
+  var color_theme = true;
 
   var readPassword = false;
   var checkbox = false;
@@ -260,22 +264,41 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: TextButton(
-                    onPressed: () {
-                      setState(() {
-                        if (phone.length <= 11) {
-                          debugPrint(phone.length.toString());
-                          correctPhone = true;
-                        }
-                        if (password.length < 8 ||
-                            !password.contains(RegExp(r'[a-z]')) ||
-                            !password.contains(RegExp(r'[A-Z]')) ||
-                            !password.contains(RegExp(r'\d')) ||
-                            !password.contains(
+                    onPressed: () async {
+                      try {
+                        setState(() {
+                          if (phone.length <= 11) {
+                            debugPrint(phone.length.toString());
+                            correctPhone = true;
+                          }
+                          if (password.length < 8 ||
+                              !password.contains(RegExp(r'[a-z]')) ||
+                              !password.contains(RegExp(r'[A-Z]')) ||
+                              !password.contains(RegExp(r'\d')) ||
+                              !password.contains(
+                                  RegExp(r'[\!\@\#\$\%\^\&\*\(\)\-\_\=\+]'))) {
+                            correctPassword = true;
+                          }
+                        });
+                        if (phone.length == 12 &&
+                            password.length >= 8 &&
+                            password.contains(RegExp(r'[a-z]')) &&
+                            password.contains(RegExp(r'[A-Z]')) &&
+                            password.contains(RegExp(r'\d')) &&
+                            password.contains(
                                 RegExp(r'[\!\@\#\$\%\^\&\*\(\)\-\_\=\+]'))) {
-                          correctPassword = true;
+                          await Login(user: {
+                            'phone': phone,
+                            'password': password,
+                            'color_theme': color_theme,
+                          }, navigatorKey: navigatorKey)
+                              .login();
                         }
-                      });
-                      FocusScope.of(context).unfocus();
+                        // ignore: use_build_context_synchronously
+                        FocusScope.of(context).unfocus();
+                      } catch (e) {
+                        debugPrint('Error: $e');
+                      }
                     },
                     child: const Text(
                       'Log in',

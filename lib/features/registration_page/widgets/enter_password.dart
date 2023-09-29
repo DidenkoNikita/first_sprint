@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 
 class EnterPasswordWidget extends StatefulWidget {
   final int activeStep;
+  final void Function(String password) onPasswordEntered;
   final void Function(int newStep) updateActiveStep;
 
   const EnterPasswordWidget({
     Key? key,
+    required this.onPasswordEntered,
     required this.activeStep,
     required this.updateActiveStep,
   }) : super(key: key);
@@ -257,6 +259,7 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget> {
                             password.contains(
                                 RegExp(r'[\!\@\#\$\%\^\&\*\(\)\-\_\=\+]')) &&
                             password == repeatPassword) {
+                          widget.onPasswordEntered(password);
                           widget.updateActiveStep(widget.activeStep + 1);
                         }
                       });

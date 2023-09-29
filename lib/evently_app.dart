@@ -1,5 +1,4 @@
 import 'package:evently_sprint/router/router.dart';
-// import 'package:evently_sprint/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class EventlyApp extends StatelessWidget {

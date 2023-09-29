@@ -11,6 +11,12 @@ class RegistrationPage extends StatefulWidget {
 class _RegistrationPageState extends State<RegistrationPage> {
   int activeStep = 1;
 
+  Map user = {
+    'user': {},
+    'user_categories': {},
+    'user_mood': {},
+  };
+
   void updateActiveStep(int newStep) {
     setState(() {
       activeStep = newStep;
@@ -96,12 +102,25 @@ class _RegistrationPageState extends State<RegistrationPage> {
           ),
           if (activeStep == 1) ...[
             PhoneNumberWidget(
+              onPhoneEntered: (String phone) {
+                setState(() {
+                  user['user']['phone'] = phone;
+                });
+              },
               activeStep: activeStep,
               updateActiveStep: updateActiveStep,
             ),
           ],
           if (activeStep == 2) ...[
             ProfileDetailsWidget(
+              onProfileDetails: (String name, String gender, String date) {
+                setState(() {
+                  user['user']['name'] = name;
+                  user['user']['gender'] = gender;
+                  user['user']['date_of_birth'] = date;
+                  user['user']['color_theme'] = true;
+                });
+              },
               activeStep: activeStep,
               updateActiveStep: updateActiveStep,
             ),
@@ -109,24 +128,46 @@ class _RegistrationPageState extends State<RegistrationPage> {
           if (activeStep == 3) ...[
             EnterPasswordWidget(
               activeStep: activeStep,
+              onPasswordEntered: (String password) {
+                setState(() {
+                  user['user']['password'] = password;
+                });
+              },
               updateActiveStep: updateActiveStep,
             ),
           ],
           if (activeStep == 4) ...[
             ChooseCategoriesWidget(
               activeStep: activeStep,
+              onCategoriesChoiced: (Map<String, bool> obj) {
+                setState(() {
+                  user['user_categories'] = {...obj};
+                });
+              },
               updateActiveStep: updateActiveStep,
             ),
           ],
           if (activeStep == 5) ...[
             ChooseMoodWidget(
               activeStep: activeStep,
+              onMoodChoiced: (Map<String, bool> obj) {
+                setState(() {
+                  user['user_mood'] = {...obj};
+                });
+              },
               updateActiveStep: updateActiveStep,
             ),
           ],
           if (activeStep == 6) ...[
             ChooseCityWidget(
+              user: user,
               activeStep: activeStep,
+              onCityEntered: (String city) {
+                setState(() {
+                  user['user']['city'] = city;
+                  print(user);
+                });
+              },
               updateActiveStep: updateActiveStep,
             ),
           ]

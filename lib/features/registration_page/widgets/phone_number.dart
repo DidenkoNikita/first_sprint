@@ -4,11 +4,14 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class PhoneNumberWidget extends StatefulWidget {
   final int activeStep;
+  final void Function(String phone) onPhoneEntered;
+
   final void Function(int newStep) updateActiveStep;
 
   const PhoneNumberWidget({
     Key? key,
     required this.activeStep,
+    required this.onPhoneEntered,
     required this.updateActiveStep,
   }) : super(key: key);
 
@@ -151,8 +154,8 @@ class _PhoneNumberWidgetState extends State<PhoneNumberWidget> {
                 onPressed: () {
                   setState(() {
                     if (phone.length == 12) {
+                      widget.onPhoneEntered(phone);
                       widget.updateActiveStep(activeStep + 1);
-                      correctPhone = false;
                     }
                     if (phone.length < 12) {
                       correctPhone = true;
