@@ -1,5 +1,6 @@
 import 'package:evently_sprint/requests/registration/abstract_registration.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -13,11 +14,14 @@ class Registration implements AbstractRegistration {
 
   final Map<dynamic, dynamic> user;
   final GlobalKey<NavigatorState> navigatorKey;
-  var url = Uri.http('192.168.1.94:3000', 'signup_remember_me');
 
   @override
   Future registration() async {
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await dotenv.load();
+    String? api = dotenv.env['SERVER_API'];
+    var url = Uri.http(api.toString(), 'signup_remember_me');
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final response = await http.post(
       url,
@@ -37,14 +41,9 @@ class Registration implements AbstractRegistration {
       prefs.setString('accessToken', accessToken);
       prefs.setString('refreshToken', refreshToken);
 
-      print('User id: $id');
-      print('Access Token: $accessToken');
-      print('Refresh Token: $refreshToken');
-
-      // Теперь мы можем использовать navigatorKey для перехода на HomePage
-      navigatorKey.currentState?.pushReplacementNamed('/');
+      navigatorKey.currentState?.pushNamed('/');
     } else {
-      print('Ошибка при запросе: ${response.statusCode}');
+      debugPrint('Ошибка при запросе: ${response.statusCode}');
     }
   }
 }

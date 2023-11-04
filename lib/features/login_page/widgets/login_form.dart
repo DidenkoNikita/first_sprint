@@ -291,7 +291,7 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                             'phone': phone,
                             'password': password,
                             'color_theme': color_theme,
-                          }, navigatorKey: navigatorKey)
+                          }, navigatorKey: navigatorKey, context: context)
                               .login();
                         }
                         // ignore: use_build_context_synchronously

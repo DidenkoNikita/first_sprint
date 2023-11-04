@@ -1,13 +1,17 @@
 import 'dart:convert';
 
 import 'package:evently_sprint/requests/get_token/request.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class GetToken implements AbstractGetToken {
-  var url = Uri.http('192.168.1.94:3000', 'check_remember_me');
   @override
   Future<String?> getToken() async {
+    await dotenv.load();
+    String? api = dotenv.env['SERVER_API'];
+    var url = Uri.http(api.toString(), 'check_remember_me');
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? userId = prefs.getInt('userId');
     String? refreshToken = prefs.getString('refreshToken');

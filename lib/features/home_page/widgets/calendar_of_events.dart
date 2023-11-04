@@ -72,7 +72,7 @@ class CalendarOfEventsHome extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
             scrollDirection: Axis.horizontal,
             controller: ScrollController(
-              initialScrollOffset: 60.0 * (initialScrollIndex - 0.5),
+              initialScrollOffset: 60.0 * (initialScrollIndex - 0.7),
             ),
             child: Row(
               children: daysArray.map((day) {

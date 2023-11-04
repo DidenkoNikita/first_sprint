@@ -1,5 +1,6 @@
 import 'package:evently_sprint/requests/login/abstract_login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -7,17 +8,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Login implements AbstractLogin {
   Login({
+    required this.context,
     required this.user,
-    required this.navigatorKey, // Добавили navigatorKey
+    required this.navigatorKey,
   });
 
+  final context;
   final Map<String, dynamic> user;
-  final GlobalKey<NavigatorState> navigatorKey; // Новое поле
-
-  var url = Uri.http('192.168.1.94:3000', 'login_remember_me');
+  final GlobalKey<NavigatorState> navigatorKey;
 
   @override
   Future login() async {
+    await dotenv.load(fileName: ".env");
+    String? api = dotenv.env['SERVER_API'];
+    print('url $api');
+    var url = Uri.http(api.toString(), 'login_remember_me');
+
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final response = await http.post(
@@ -38,15 +44,9 @@ class Login implements AbstractLogin {
       prefs.setInt('userId', id);
       prefs.setString('accessToken', accessToken);
       prefs.setString('refreshToken', refreshToken);
-
-      print('User id: $id');
-      print('Access Token: $accessToken');
-      print('Refresh Token: $refreshToken');
-
-      // Теперь мы можем использовать navigatorKey для перехода на HomePage
-      navigatorKey.currentState?.pushReplacementNamed('/');
+      navigatorKey.currentState?.pushNamed('/');
     } else {
-      print('Ошибка при запросе: ${response.statusCode}');
+      debugPrint('Ошибка при запросе: ${response.statusCode}');
     }
   }
 }

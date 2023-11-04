@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HomeFooter extends StatelessWidget {
-  const HomeFooter({super.key});
+  const HomeFooter({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +34,7 @@ class HomeFooter extends StatelessWidget {
       },
     ];
     String? currentRoute = ModalRoute.of(context)!.settings.name;
+
     return Container(
       height: 74,
       decoration: const BoxDecoration(
@@ -50,20 +51,28 @@ class HomeFooter extends StatelessWidget {
             width: 75,
             height: 56,
             decoration: BoxDecoration(
-              color: currentRoute == item['link']
+              color: currentRoute == item['link'] ||
+                      (currentRoute == '/profile_settings' &&
+                          item['link'] == '/profile')
                   ? const Color.fromRGBO(227, 245, 99, 1)
                   : const Color.fromRGBO(26, 26, 26, 1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: TextButton(
-              onPressed: () {},
+              onPressed: () {
+                debugPrint(currentRoute);
+                debugPrint(item['link'].toString());
+                Navigator.of(context).pushNamed(item['link']);
+              },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   SvgPicture.asset(
                     item['icon'],
                     // ignore: deprecated_member_use
-                    color: currentRoute == item['link']
+                    color: currentRoute == item['link'] ||
+                            (currentRoute == '/profile_settings' &&
+                                item['link'] == '/profile')
                         ? Colors.black
                         : Colors.white,
                   ),
@@ -72,7 +81,9 @@ class HomeFooter extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
-                      color: currentRoute == item['link']
+                      color: currentRoute == item['link'] ||
+                              (currentRoute == '/profile_settings' &&
+                                  item['link'] == '/profile')
                           ? Colors.black
                           : Colors.white,
                     ),

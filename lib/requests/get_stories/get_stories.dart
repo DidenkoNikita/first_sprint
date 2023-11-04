@@ -1,14 +1,17 @@
 import 'dart:convert';
 
 import 'package:evently_sprint/requests/get_stories/reguest.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class GetStories implements AbstractGetStories {
-  var url = Uri.http('192.168.1.94:3000', 'stories');
-
   @override
   Future getStories() async {
     try {
+      await dotenv.load();
+      String? api = dotenv.env['SERVER_API'];
+      var url = Uri.http(api.toString(), 'stories');
+      
       final response = await http.get(url, headers: {
         'Content-Type': 'application/json',
       });
