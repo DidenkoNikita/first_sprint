@@ -60,8 +60,6 @@ class HomeFooter extends StatelessWidget {
             ),
             child: TextButton(
               onPressed: () {
-                debugPrint(currentRoute);
-                debugPrint(item['link'].toString());
                 Navigator.of(context).pushNamed(item['link']);
               },
               child: Column(

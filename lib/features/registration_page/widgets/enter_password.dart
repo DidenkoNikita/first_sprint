@@ -109,7 +109,6 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget> {
                           setState(() {
                             readPassword = !readPassword;
                           });
-                          debugPrint(readPassword.toString());
                         },
                       ),
                     ],
@@ -180,7 +179,6 @@ class _EnterPasswordWidgetState extends State<EnterPasswordWidget> {
                           setState(() {
                             readAgainPassword = !readAgainPassword;
                           });
-                          debugPrint(readPassword.toString());
                         },
                       ),
                     ],

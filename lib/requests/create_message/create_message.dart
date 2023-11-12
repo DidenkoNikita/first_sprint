@@ -1,22 +1,27 @@
 import 'dart:convert';
 
-import 'package:evently_sprint/requests/create_comment/request.dart';
+import 'package:evently_sprint/requests/create_message/request.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
-class CreateComment implements AbstractCreateComment {
-  CreateComment({required this.text, required this.postId});
+class CreateMessage implements AbstractCreateMessage {
+  CreateMessage(
+      {required this.id,
+      required this.text,
+      required this.chatId,
+      required this.postId});
 
+  final int id;
   final String text;
-  final int postId;
+  final int? chatId;
+  final int? postId;
 
   @override
-  Future createComment() async {
+  Future createMessage() async {
     await dotenv.load();
     String? api = dotenv.env['SERVER_API'];
-    var url = Uri.http(api.toString(), 'comments');
+    var url = Uri.http(api.toString(), 'messages');
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final int? userId = prefs.getInt('userId');
@@ -31,19 +36,19 @@ class CreateComment implements AbstractCreateComment {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $accessToken',
         },
-        body: jsonEncode({'text': text, 'user_id': userId, 'post_id': postId}),
+        body: jsonEncode({
+          'user2Id': id,
+          'text': text,
+          'chatId': chatId,
+          'user_id': userId,
+          'postId': postId
+        }),
       );
 
       final dynamic responseData = json.decode(response.body);
 
       if (response.statusCode == 200) {
         return responseData;
-      } else if (response.statusCode == 201) {
-        final accessToken = responseData;
-        prefs.setString('accessToken', accessToken);
-      } else {
-        debugPrint('Ошибка при запросе: ${response.statusCode}');
-        return null;
       }
     }
   }

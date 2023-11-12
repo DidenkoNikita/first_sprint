@@ -219,7 +219,6 @@ class _ProfileDetailsWidgetState extends State<ProfileDetailsWidget> {
                   if (name.length < 3) {
                     correctName = true;
                   }
-                  debugPrint(selectedDate.toString());
                 });
                 FocusScope.of(context).unfocus();
               },

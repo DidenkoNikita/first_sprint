@@ -47,7 +47,6 @@ class _ChooseCategoriesWidgetState extends State<ChooseMoodWidget> {
         obj[key] = !(obj[key] ?? false);
         obj['do_not_know'] = false;
       }
-      debugPrint(obj.toString());
     });
   }
 

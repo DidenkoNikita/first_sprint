@@ -1,11 +1,14 @@
+import 'package:evently_sprint/features/chat_page/view/view.dart';
 import 'package:evently_sprint/features/components/home_footer.dart';
 import 'package:evently_sprint/features/write_message_page/widgets/widgets.dart';
+import 'package:evently_sprint/requests/create_chat/request.dart';
 import 'package:evently_sprint/requests/get_user_list/get_user_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class WriteMessagePage extends StatefulWidget {
-  const WriteMessagePage({Key? key}) : super(key: key);
+  const WriteMessagePage({super.key, required this.chatsList});
+  final List<dynamic> chatsList;
 
   @override
   State<WriteMessagePage> createState() => _WriteMessagePageState();
@@ -23,12 +26,11 @@ class _WriteMessagePageState extends State<WriteMessagePage> {
   Future<void> _fetchUserList() async {
     try {
       dynamic fetchedUserList = await GetUserList().getUserList();
-      print(fetchedUserList);
       setState(() {
         userList = fetchedUserList;
       });
     } catch (e) {
-      print('Ошибка при получении списка пользователей: $e');
+      debugPrint('Ошибка при получении списка пользователей: $e');
     }
   }
 
@@ -132,7 +134,38 @@ class _WriteMessagePageState extends State<WriteMessagePage> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    var filteredChat;
+                                    for (var chat in widget.chatsList) {
+                                      if (chat['users_id'] != null &&
+                                          chat['users_id']
+                                              .contains(user['id'])) {
+                                        filteredChat = chat;
+                                        break;
+                                      }
+                                    }
+
+                                    if (filteredChat != null) {
+                                      print('filteredChat $filteredChat');
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                        builder: (context) => ChatPage(
+                                          name: filteredChat['name'],
+                                          friendId: user['id'],
+                                        ),
+                                      ));
+                                    } else {
+                                      print('filteredChat $filteredChat');
+                                      await CreateChat(id: user['id'])
+                                          .createChat();
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                              builder: (context) => ChatPage(
+                                                    name: user['name'],
+                                                    friendId: user['id'],
+                                                  )));
+                                    }
+                                  },
                                   icon: SvgPicture.asset(
                                     'assets/svg/chats.svg',
                                     // ignore: deprecated_member_use

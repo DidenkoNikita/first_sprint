@@ -91,7 +91,6 @@ class _ChooseCategoriesWidgetState extends State<ChooseCategoriesWidget> {
                       setState(() {
                         final key = button.toLowerCase().replaceAll(' ', '_');
                         obj[key] = !(obj[key] ?? false);
-                        debugPrint(obj.toString());
                       });
                     },
                     child: Container(

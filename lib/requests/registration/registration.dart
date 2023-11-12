@@ -41,7 +41,7 @@ class Registration implements AbstractRegistration {
       prefs.setString('accessToken', accessToken);
       prefs.setString('refreshToken', refreshToken);
 
-      navigatorKey.currentState?.pushNamed('/');
+      navigatorKey.currentState?.pushNamed('/home');
     } else {
       debugPrint('Ошибка при запросе: ${response.statusCode}');
     }

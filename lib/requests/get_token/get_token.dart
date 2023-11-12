@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:evently_sprint/requests/get_token/request.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -30,11 +31,9 @@ class GetToken implements AbstractGetToken {
       String accessToken = responseData['accessToken'];
       prefs.setInt('userId', id);
       prefs.setString('accessToken', accessToken);
-      print('User id: $id');
-      print('Access Token: $accessToken');
       return response.body;
     } else {
-      print('Ошибка при запросе: ${response.statusCode}');
+      debugPrint('Ошибка при запросе: ${response.statusCode}');
       return null;
     }
   }

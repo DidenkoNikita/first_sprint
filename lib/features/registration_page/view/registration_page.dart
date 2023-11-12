@@ -165,7 +165,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
               onCityEntered: (String city) {
                 setState(() {
                   user['user']['city'] = city;
-                  print(user);
                 });
               },
               updateActiveStep: updateActiveStep,

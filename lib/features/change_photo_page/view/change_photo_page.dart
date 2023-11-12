@@ -69,14 +69,13 @@ class _ChangePhotoPageState extends State<ChangePhotoPage> {
                       await picker.pickImage(source: ImageSource.gallery);
 
                   if (image != null) {
-                    Reference ref = storage.ref().child(
-                        'avatars/image.jpg');
+                    Reference ref = storage.ref().child('avatars/image.jpg');
                     UploadTask uploadTask = ref.putFile(File(image.path));
 
                     uploadTask.whenComplete(() async {
                       String url = await ref.getDownloadURL();
-                      print("Download URL: $url");
-                      final avatar = await UploadAvatar(image: url).uploadAvatar();
+                      final avatar =
+                          await UploadAvatar(image: url).uploadAvatar();
                       setState(() {
                         widget.user['user']['link_avatar'] = avatar;
                       });

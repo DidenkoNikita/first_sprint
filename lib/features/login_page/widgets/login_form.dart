@@ -188,7 +188,6 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                           setState(() {
                             readPassword = !readPassword;
                           });
-                          debugPrint(readPassword.toString());
                         },
                       ),
                     ],
@@ -268,7 +267,6 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                       try {
                         setState(() {
                           if (phone.length <= 11) {
-                            debugPrint(phone.length.toString());
                             correctPhone = true;
                           }
                           if (password.length < 8 ||

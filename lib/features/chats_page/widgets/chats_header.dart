@@ -1,8 +1,10 @@
+import 'package:evently_sprint/features/write_message_page/view/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class ChatsHeader extends StatelessWidget implements PreferredSizeWidget {
-  const ChatsHeader({super.key});
+  const ChatsHeader({super.key, required this.chatsList});
+  final List<dynamic> chatsList;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,10 @@ class ChatsHeader extends StatelessWidget implements PreferredSizeWidget {
           ),
           IconButton(
             onPressed: () {
-              Navigator.of(context).pushNamed('/write_message');
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => WriteMessagePage(
+                        chatsList: chatsList,
+                      )));
             },
             icon: SvgPicture.asset('assets/svg/edit-rectangle.svg'),
           ),

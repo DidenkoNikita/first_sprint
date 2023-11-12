@@ -1,28 +1,28 @@
-import 'package:evently_sprint/requests/create_comment/request.dart';
+import 'package:evently_sprint/requests/create_message/request.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/svg.dart';
 
-class CommentsFooter extends StatefulWidget {
-  const CommentsFooter({
-    Key? key,
-    required this.comments,
-    required this.postId,
-    required this.onAddComment,
-  }) : super(key: key);
+class ChatFooter extends StatefulWidget {
+  const ChatFooter(
+      {Key? key,
+      required this.id,
+      required this.chatId,
+      required this.addMessage})
+      : super(key: key);
 
-  final int postId;
-  final List<Map<String, dynamic>> comments;
-  final Function(Map<String, dynamic>) onAddComment;
+  final int id;
+  final int? chatId;
+  final Function(Map<String, dynamic>) addMessage;
 
   @override
-  State<CommentsFooter> createState() => _CommentsFooterState();
+  State<ChatFooter> createState() => _ChatFooterState();
 }
 
-class _CommentsFooterState extends State<CommentsFooter> {
+class _ChatFooterState extends State<ChatFooter> {
   bool isKeyboardVisible = false;
-  String commentText = '';
-  final TextEditingController _commentController = TextEditingController();
+  String messageText = '';
+  final TextEditingController _messageController = TextEditingController();
 
   @override
   void initState() {
@@ -75,10 +75,10 @@ class _CommentsFooterState extends State<CommentsFooter> {
                     ),
                     padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                     child: TextField(
-                      controller: _commentController,
+                      controller: _messageController,
                       onChanged: (text) {
                         setState(() {
-                          commentText = text;
+                          messageText = text;
                         });
                       },
                       style: const TextStyle(
@@ -87,7 +87,7 @@ class _CommentsFooterState extends State<CommentsFooter> {
                         color: Colors.white,
                       ),
                       decoration: const InputDecoration(
-                        hintText: 'Comment',
+                        hintText: 'Type your message',
                         hintStyle: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
@@ -106,14 +106,16 @@ class _CommentsFooterState extends State<CommentsFooter> {
                     ),
                     child: IconButton(
                       onPressed: () async {
-                        commentText = _commentController.text;
-                        if (commentText != '') {
-                          final comment = await CreateComment(
-                            text: commentText,
-                            postId: widget.postId,
-                          ).createComment();
-                          widget.onAddComment(comment);
-                          _commentController.clear();
+                        messageText = _messageController.text;
+                        if (messageText != '') {
+                          final message = await CreateMessage(
+                            chatId: widget.chatId,
+                            id: widget.id,
+                            text: messageText,
+                            postId: null,
+                          ).createMessage();
+                          widget.addMessage(message);
+                          _messageController.clear();
                           FocusScope.of(context).unfocus();
                         }
                       },

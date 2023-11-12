@@ -21,7 +21,6 @@ class Login implements AbstractLogin {
   Future login() async {
     await dotenv.load(fileName: ".env");
     String? api = dotenv.env['SERVER_API'];
-    print('url $api');
     var url = Uri.http(api.toString(), 'login_remember_me');
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -44,7 +43,7 @@ class Login implements AbstractLogin {
       prefs.setInt('userId', id);
       prefs.setString('accessToken', accessToken);
       prefs.setString('refreshToken', refreshToken);
-      navigatorKey.currentState?.pushNamed('/');
+      navigatorKey.currentState?.pushNamed('/home');
     } else {
       debugPrint('Ошибка при запросе: ${response.statusCode}');
     }
