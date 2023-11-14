@@ -74,6 +74,7 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    messageList.sort((a, b) => a['id'].compareTo(b['id']));
     return Scaffold(
       appBar: ChatHeader(name: widget.name),
       body: Container(
