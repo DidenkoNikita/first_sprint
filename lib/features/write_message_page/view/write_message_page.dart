@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class WriteMessagePage extends StatefulWidget {
-  const WriteMessagePage({super.key, required this.chatsList});
+  const WriteMessagePage(
+      {super.key, required this.chatsList, required this.updateChatsList});
   final List<dynamic> chatsList;
+  final Function(List<dynamic>) updateChatsList;
 
   @override
   State<WriteMessagePage> createState() => _WriteMessagePageState();
@@ -150,6 +152,8 @@ class _WriteMessagePageState extends State<WriteMessagePage> {
                                       Navigator.of(context)
                                           .push(MaterialPageRoute(
                                         builder: (context) => ChatPage(
+                                          updateChatsList:
+                                              widget.updateChatsList,
                                           name: filteredChat['name'],
                                           friendId: user['id'],
                                         ),
@@ -161,6 +165,8 @@ class _WriteMessagePageState extends State<WriteMessagePage> {
                                       Navigator.of(context)
                                           .push(MaterialPageRoute(
                                               builder: (context) => ChatPage(
+                                                    updateChatsList:
+                                                        widget.updateChatsList,
                                                     name: user['name'],
                                                     friendId: user['id'],
                                                   )));

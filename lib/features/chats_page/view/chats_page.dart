@@ -25,6 +25,12 @@ class _ChatsPageState extends State<ChatsPage> {
     return num.toString().padLeft(2, '0');
   }
 
+  void updateChatsList(List<dynamic> updatedList) {
+    setState(() {
+      chatsList = updatedList;
+    });
+  }
+
   Future<void> initializeSocket() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final int? userId = prefs.getInt('userId');
@@ -65,6 +71,7 @@ class _ChatsPageState extends State<ChatsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ChatsHeader(
+        updateChatsList: updateChatsList,
         chatsList: chatsList,
       ),
       body: SingleChildScrollView(
@@ -117,6 +124,7 @@ class _ChatsPageState extends State<ChatsPage> {
                             builder: (context) => ChatPage(
                                   name: chat['name'],
                                   friendId: friendId,
+                                  updateChatsList: updateChatsList,
                                 )));
                       },
                       child: SizedBox(

@@ -7,12 +7,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({Key? key, required this.name, required this.friendId})
+  const ChatPage(
+      {Key? key,
+      required this.name,
+      required this.friendId,
+      required this.updateChatsList})
       : super(key: key);
 
   final String name;
   final int friendId;
-
+  final Function(List<dynamic>) updateChatsList;
   @override
   State<ChatPage> createState() => _ChatPageState();
 }
@@ -34,6 +38,20 @@ class _ChatPageState extends State<ChatPage> {
     var socket = io.io('ws://${api.toString()}/chat', <String, dynamic>{
       'transports': ['websocket'],
     });
+    socket.emit("getChats", id);
+    socket.on(
+        "chatData",
+        (data) => {
+              setState(() {
+                List<dynamic> updatedList = List.from(data)
+                  ..sort((a, b) {
+                    DateTime dateA = DateTime.parse(a['timeMessage']);
+                    DateTime dateB = DateTime.parse(b['timeMessage']);
+                    return dateB.compareTo(dateA);
+                  });
+                widget.updateChatsList(updatedList);
+              })
+            });
     socket.emit("getMessageList", chatId);
     socket.on(
       "messageList",
@@ -45,6 +63,47 @@ class _ChatPageState extends State<ChatPage> {
         });
       },
     );
+    socket.on(
+        "createMessage",
+        (message) => {
+              setState(() {
+                messageList.forEach((message) {
+                  if (!messageList.any((m) => m['id'] == message['id']) &&
+                      message['created_at'] != null) {
+                    messageList.add(message);
+                    messageList.sort((message1, message2) =>
+                        message1['id'] - message2['id']);
+                  }
+                });
+              })
+            });
+    socket.on(
+      "messageIsRead",
+      (message) {
+        setState(() {
+          final msg = messageList.firstWhere((m) => m['id'] == message['id']);
+          if (msg != null) {
+            msg['is_read'] = true;
+          }
+          messageList
+              .sort((message1, message2) => message1['id'] - message2['id']);
+        });
+      },
+    );
+
+    socket.on(
+        "updateChat",
+        (chat) => {
+              setState(() {
+                List<dynamic> updatedList = List.from(chat)
+                  ..sort((a, b) {
+                    DateTime dateA = DateTime.parse(a['timeMessage']);
+                    DateTime dateB = DateTime.parse(b['timeMessage']);
+                    return dateB.compareTo(dateA);
+                  });
+                widget.updateChatsList(updatedList);
+              })
+            });
   }
 
   @override

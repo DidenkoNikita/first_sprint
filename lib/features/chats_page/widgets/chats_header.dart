@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class ChatsHeader extends StatelessWidget implements PreferredSizeWidget {
-  const ChatsHeader({super.key, required this.chatsList});
+  const ChatsHeader(
+      {super.key, required this.chatsList, required this.updateChatsList});
   final List<dynamic> chatsList;
+  final Function(List<dynamic>) updateChatsList;
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +31,7 @@ class ChatsHeader extends StatelessWidget implements PreferredSizeWidget {
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => WriteMessagePage(
-                        chatsList: chatsList,
-                      )));
+                      chatsList: chatsList, updateChatsList: updateChatsList)));
             },
             icon: SvgPicture.asset('assets/svg/edit-rectangle.svg'),
           ),
