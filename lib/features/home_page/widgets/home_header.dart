@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -23,7 +25,6 @@ class HomeHeader extends StatelessWidget implements PreferredSizeWidget {
                   children: [
                     SvgPicture.asset(
                       'assets/svg/city.svg',
-                      // ignore: deprecated_member_use
                       color: Colors.white,
                     ),
                     const SizedBox(width: 10),

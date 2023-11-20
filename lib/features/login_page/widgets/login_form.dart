@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
+
 import 'package:evently_sprint/requests/login/login.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -292,7 +294,6 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                           }, navigatorKey: navigatorKey, context: context)
                               .login();
                         }
-                        // ignore: use_build_context_synchronously
                         FocusScope.of(context).unfocus();
                       } catch (e) {
                         debugPrint('Error: $e');

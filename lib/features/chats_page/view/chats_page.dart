@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, prefer_typing_uninitialized_variables
 
 import 'package:evently_sprint/features/chat_page/view/view.dart';
 import 'package:evently_sprint/features/chats_page/widgets/widgets.dart';
@@ -45,19 +45,17 @@ class _ChatsPageState extends State<ChatsPage> {
     socket.emit('getChats', userId);
     socket.on('chatData', (data) {
       setState(() {
-        // chatsList = data;
         chatsList = List.from(data)
           ..sort((a, b) {
             DateTime dateA = DateTime.parse(a['timeMessage']);
             DateTime dateB = DateTime.parse(b['timeMessage']);
             return dateB.compareTo(dateA);
           });
-        print('chats:: $chatsList');
       });
     });
 
     socket.on('createChat', (chatData) {
-      print("new chat created $chatData");
+      debugPrint("new chat created $chatData");
     });
   }
 
@@ -119,7 +117,6 @@ class _ChatsPageState extends State<ChatsPage> {
                       onTap: () {
                         final int friendId = (List<int>.from(chat['users_id']))
                             .firstWhere((idUser) => idUser != id);
-                        print(friendId);
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => ChatPage(
                                   name: chat['name'],

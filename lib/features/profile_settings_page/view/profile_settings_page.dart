@@ -44,9 +44,7 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ChangePhotoPage(
-                            user: user
-                          ),
+                          builder: (context) => ChangePhotoPage(user: user),
                         ));
                       },
                       child: Container(
@@ -62,9 +60,10 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                             const Text(
                               'My photo',
                               style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.white),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white,
+                              ),
                             ),
                             const Spacer(),
                             Container(
@@ -94,9 +93,10 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                           const Text(
                             'Personal data',
                             style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white,
+                            ),
                           ),
                           const Spacer(),
                           Container(
@@ -211,9 +211,10 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                           const Text(
                             'Change city',
                             style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white,
+                            ),
                           ),
                           const Spacer(),
                           Text(
@@ -320,9 +321,10 @@ class _ProfileSettingsPageState extends State<ProfileSettingsPage> {
                           const Text(
                             'Change password',
                             style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white,
+                            ),
                           ),
                           const Spacer(),
                           Container(

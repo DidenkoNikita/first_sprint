@@ -173,14 +173,12 @@ class _DatePickerState extends State<DatePicker> {
         alignment: Alignment.center,
         width: 370,
         padding: const EdgeInsets.fromLTRB(5, 10, 10, 10),
-        // height: 440,
         decoration: BoxDecoration(
           color: const Color.fromRGBO(36, 36, 36, 1),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
           children: [
-            // Header
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -231,7 +229,6 @@ class _DatePickerState extends State<DatePicker> {
                 ),
               ],
             ),
-            // Weekdays
             SizedBox(
               width: 325,
               height: 50,
@@ -246,7 +243,6 @@ class _DatePickerState extends State<DatePicker> {
                 }).toList(),
               ),
             ),
-            // Calendar Entries
             SizedBox(
               width: 325,
               child: Center(
@@ -287,7 +283,6 @@ class _DatePickerState extends State<DatePicker> {
             const SizedBox(
               height: 14,
             ),
-            // Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
